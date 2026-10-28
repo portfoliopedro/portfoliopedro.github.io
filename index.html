@@ -938,8 +938,6 @@ function renderCase(p){
   const principal = p.videoPrincipal?{tipo:'video',src:p.videoPrincipal,poster:p.posterVideo,alt:`${p.cliente}: vídeo principal`}:(p.imagemCapa?{tipo:'imagem',src:p.imagemCapa,alt:`${p.cliente}: ${p.nome}`}:null);
   let k=0;
   const blocks=[];
-  [['Contexto',p.contexto],['Desafio',p.desafio],['Conceito criativo',p.conceito],['Direção de arte',p.direcaoArte],['Execução',p.motion||p.solucao]]
-    .forEach(([t,v])=>{ if(v) blocks.push(bloco(++k,t,v)); });
   const fm=Array.isArray(p.formatos)&&p.formatos.length?p.formatos:(Array.isArray(p.formatos)?[]:[
     {nome:'Horizontal',proporcao:'16/9',src:'',sugestao:`assets/projects/${p.id}/formato-16x9.jpg`},
     {nome:'Vertical',proporcao:'9/16',src:'',sugestao:`assets/projects/${p.id}/formato-9x16.jpg`},
