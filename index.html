@@ -935,7 +935,7 @@ function renderCase(p){
     ['Cargo',esc(cargo)],
     ['Ferramentas',p.ferramentas.length?esc(p.ferramentas.join(', ')):'<span class="pend-t">A confirmar</span>']
   ];
-  const principal = p.videoCapa?capaDe(p):p.videoPrincipal?{tipo:'video',src:p.videoPrincipal,poster:p.posterVideo,alt:`${p.cliente}: vídeo principal`}:(p.imagemCapa?{tipo:'imagem',src:p.imagemCapa,alt:`${p.cliente}: ${p.nome}`}:null);
+  const principal = p.videoPrincipal?{tipo:'video',src:p.videoPrincipal,poster:p.posterVideo,alt:`${p.cliente}: vídeo principal`}:(p.imagemCapa?{tipo:'imagem',src:p.imagemCapa,alt:`${p.cliente}: ${p.nome}`}:null);
   let k=0;
   const blocks=[];
   [['Contexto',p.contexto],['Desafio',p.desafio],['Conceito criativo',p.conceito],['Direção de arte',p.direcaoArte],['Execução',p.motion||p.solucao]]
@@ -962,7 +962,7 @@ function renderCase(p){
       <div class="tags">${p.categorias.map(c=>`<span class="tag">${esc(c)}</span>`).join('')}</div>
       <div class="c-meta">${meta.map(([a,b])=>`<div><span class="k">${a}</span><span class="v">${b}</span></div>`).join('')}</div>
     </div>
-    <div class="wrap c-hero"><div class="media">${midia(principal,{rotulo:'Vídeo ou imagem principal',tipo:'video',proporcao:'16/9',sugestao:`assets/projects/${p.id}/video-principal.mp4`,destaque:p.cliente},{eager:true})}</div></div>
+    ${p.videoPrincipal?`<div class="wrap c-hero"><div class="media">${midia(principal,{rotulo:'Vídeo ou imagem principal',tipo:'video',proporcao:'16/9',sugestao:`assets/projects/${p.id}/video-principal.mp4`,destaque:p.cliente},{eager:true})}</div></div>`:''}
     <div class="wrap c-blocks">${blocks.join('')}</div>
     <div class="case-next"><div class="wrap">
       <button class="next-link" type="button" data-go="${prox.id}"><span class="caps" style="color:var(--gray)">Próximo projeto</span><b>${esc(prox.cliente)} →</b></button>
