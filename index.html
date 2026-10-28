@@ -114,7 +114,7 @@ img,video{display:block;max-width:100%}
 .dark{background:var(--ink);color:#fff;--stroke:#fff}
 
 /* ===== Hero ===== */
-.hero{position:relative;padding-top:calc(clamp(96px,11vw,132px) + env(safe-area-inset-top,0px));padding-bottom:clamp(64px,8vw,112px);overflow:hidden}
+.hero{position:relative;padding-top:calc(clamp(96px,11vw,132px) + env(safe-area-inset-top,0px));padding-bottom:clamp(28px,3.5vw,48px);overflow:hidden}
 .hero-in{position:relative;will-change:transform}
 .hero-top{display:flex;justify-content:space-between;gap:16px;padding-bottom:18px;border-bottom:1px solid var(--line);color:var(--gray)}
 .kt{margin:clamp(40px,5.5vw,80px) 0 0;font-family:var(--f-display);font-weight:700;text-transform:uppercase;line-height:.86;letter-spacing:0;color:var(--ink);position:relative}
@@ -178,6 +178,8 @@ img,video{display:block;max-width:100%}
 .pcard.sm.off{margin-top:clamp(0px,9vw,140px)}
 .pcard.feat .pinfo{align-self:end}
 .pmedia .media>img,.pmedia .media>video{transform:translate3d(0,var(--py,0px),0) scale(1.06)}
+#projetos{padding-top:clamp(8px,1.5vw,24px)}
+.filters[hidden]{display:none!important}
 .proj-head{display:grid;grid-template-columns:repeat(12,1fr);gap:20px var(--gap);align-items:end;margin-bottom:clamp(36px,5vw,64px)}
 .proj-head .intro{grid-column:1 / span 6;margin:0;font:300 clamp(1.25rem,2vw,1.6rem)/1.4 var(--f-display);max-width:36ch;text-wrap:balance}
 .proj-head .filters{grid-column:7 / span 6;justify-content:flex-end;margin:0}
@@ -475,11 +477,8 @@ figcaption .gt{display:block;font:700 15px var(--f-display);color:var(--ink);mar
 <!-- 02 — Projetos selecionados -->
 <section class="sec" id="projetos" data-tone="light" aria-labelledby="projTitle">
   <div class="wrap">
-    <div class="sec-title"><small>02</small><h2 id="projTitle"><span class="mk"><span>Projetos selecionados</span></span></h2></div>
-    <div class="proj-head">
-      <p class="intro rv">Uma seleção de campanhas e projetos que conectam conceito, direção de arte e execução visual.</p>
-      <div class="filters rv" style="--d:.1s" id="filters" role="group" aria-label="Filtrar projetos por categoria"></div>
-    </div>
+    <h2 class="sr" id="projTitle">Projetos selecionados</h2>
+    <div class="filters" id="filters" hidden></div>
     <div class="pgrid" id="pgrid" aria-live="polite"></div>
   </div>
 </section>
