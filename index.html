@@ -209,6 +209,20 @@ img,video{display:block;max-width:100%}
 @media (max-width:620px){.pcard.sm.off{margin-top:0}}
 @media (max-width:620px){.pcard.sm{grid-column:1 / -1}.pmedia .go{display:none}}
 
+/* ===== Trajetória: rolo de datas ===== */
+#sobre{padding-block:clamp(64px,7vw,104px)}
+.reel{position:relative;padding:clamp(28px,5vw,64px) 0 0;text-align:center}
+.reel-view{position:relative;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 30%,#000 70%,transparent);mask-image:linear-gradient(90deg,transparent,#000 30%,#000 70%,transparent)}
+.reel-track{display:flex;gap:clamp(28px,4vw,64px);width:max-content;will-change:transform;filter:url(#mblur)}
+.reel-track span{font:700 clamp(1.5rem,3vw,2.6rem)/1.1 var(--f-display);letter-spacing:.01em;white-space:nowrap;color:var(--ink);opacity:.18;transition:opacity .6s var(--ease)}
+.reel-track span.on{opacity:1}
+.reel-line{height:1px;margin:clamp(18px,2.4vw,28px) auto 0;width:min(760px,90%);background:linear-gradient(90deg,transparent,var(--ink) 50%,transparent);opacity:.55}
+.reel-info{min-height:4.2em;margin-top:clamp(18px,2.4vw,28px);display:grid;gap:6px;justify-items:center}
+.reel-info b{font:400 clamp(1rem,1.4vw,1.25rem)/1.3 var(--f-display)}
+.reel-info small{font-size:14px;color:var(--gray)}
+.reel-info>*{transition:opacity .45s var(--ease),transform .45s var(--ease)}
+.reel-info.out>*{opacity:0;transform:translateY(6px)}
+.reel-count{display:block;margin-top:clamp(14px,2vw,22px);font-size:10.5px;color:var(--gray)}
 /* ===== Motion & DOOH: linha do tempo ===== */
 #motion{padding-block:clamp(64px,7vw,104px)}
 .tline{position:relative;display:grid;grid-template-columns:repeat(4,1fr);gap:var(--gap);padding:clamp(4px,1vw,12px) 0 0}
@@ -488,9 +502,13 @@ figcaption .gt{display:block;font:700 15px var(--f-display);color:var(--ink);mar
 <section class="sec" id="sobre" data-tone="light" aria-labelledby="aboutTitle">
   <div class="wrap">
     <div class="sec-title"><small>04</small><h2 id="aboutTitle"><span class="mk"><span>Trajetória</span></span></h2></div>
-    <div class="tl">
-      <div class="tl-head rv" style="justify-content:flex-end"><span class="caps" style="color:var(--gray)">2018 — 2026</span></div>
-      <ol id="timeline"></ol>
+    <div class="reel rv" id="reel" aria-roledescription="linha do tempo">
+      <svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="mblur" x="-20%" y="0" width="140%" height="100%"><feGaussianBlur id="mblurStd" stdDeviation="0 0"/></filter></svg>
+      <div class="reel-view" aria-hidden="true"><div class="reel-track" id="reelTrack"></div></div>
+      <div class="reel-line" aria-hidden="true"></div>
+      <div class="reel-info" id="reelInfo" aria-live="polite"></div>
+      <span class="reel-count caps" id="reelCount" aria-hidden="true"></span>
+      <ol class="sr" id="timeline"></ol>
     </div>
 
   </div>
@@ -895,8 +913,46 @@ renderFiltros();renderProjetos();
 
 
 /* ---------- Sobre ---------- */
-document.getElementById('timeline').innerHTML=TRAJETORIA.map(j=>`
-  <li class="job rv"><span class="when">${esc(j.periodo)}</span><div class="where"><b>${esc(j.empresa)}</b><small>${esc(j.local)}</small></div><div class="what"><b>${esc(j.cargo)}</b><p>${esc(j.texto)}</p></div></li>`).join('');
+/* Rolo de datas: as datas deslizam na horizontal com rastro de movimento;
+   abaixo da linha aparecem só a função e o local da experiência em destaque. */
+(function(){
+  const lista=[...TRAJETORIA].reverse();               // da mais antiga para a atual
+  const anos=j=>{ const y=String(j.periodo).match(/\d{4}/g)||[]; const a=y[0], b=y[y.length-1]; return a===b?a:`${a} – ${b}`; };
+  document.getElementById('timeline').innerHTML=lista.map(j=>`<li>${esc(j.periodo)}: ${esc(j.cargo)}, ${esc(j.empresa)}, ${esc(j.local)}</li>`).join('');
+  const track=document.getElementById('reelTrack'), info=document.getElementById('reelInfo'), count=document.getElementById('reelCount');
+  const std=document.getElementById('mblurStd'), view=track.parentElement;
+  track.innerHTML=lista.map(j=>`<span>${esc(anos(j))}</span>`).join('');
+  const els=[...track.children];
+  let i=0, x=0;
+  const alvo=k=>{ const e=els[k]; return view.clientWidth/2-(e.offsetLeft+e.offsetWidth/2); };
+  const mostrarInfo=k=>{ const j=lista[k];
+    info.innerHTML=`<b>${esc(j.cargo)}</b><small>${esc(j.empresa)} · ${esc(j.local)}</small>`;
+    count.textContent=`${pad(k+1)} / ${pad(lista.length)}`; };
+  function marcar(k){ els.forEach((e,n)=>e.classList.toggle('on',n===k)); }
+  function ir(k,anim=true){
+    const de=x, para=alvo(k);
+    marcar(k);
+    info.classList.add('out');
+    setTimeout(()=>{ mostrarInfo(k); info.classList.remove('out'); }, anim?420:0);
+    if(!anim||reduce){ x=para; track.style.transform=`translate3d(${x}px,0,0)`; return; }
+    const dur=k===0?1300:950, t0=performance.now();
+    const ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+    let ult=de;
+    (function passo(t){
+      const p=Math.min(1,(t-t0)/dur); x=de+(para-de)*ease(p);
+      track.style.transform=`translate3d(${x.toFixed(1)}px,0,0)`;
+      const v=Math.abs(x-ult); ult=x;
+      std.setAttribute('stdDeviation',`${Math.min(18,v*.9).toFixed(1)} 0`);
+      if(p<1) requestAnimationFrame(passo); else std.setAttribute('stdDeviation','0 0');
+    })(t0);
+  }
+  ir(0,false);
+  addEventListener('resize',()=>ir(i,false));
+  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(()=>ir(i,false));
+  let visivel=false;
+  if('IntersectionObserver' in window) new IntersectionObserver(es=>{visivel=es[0].isIntersecting}).observe(view); else visivel=true;
+  setInterval(()=>{ if(visivel&&!document.hidden){ i=(i+1)%lista.length; ir(i); } }, 2800);
+})();
 
 /* ---------- Contato: só ícones (links sem endereço configurado ficam ocultos) ---------- */
 (function(){
