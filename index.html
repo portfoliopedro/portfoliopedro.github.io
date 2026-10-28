@@ -425,8 +425,8 @@ figcaption .gt{display:block;font:700 15px var(--f-display);color:var(--ink);mar
     <div class="hero-top fade d0"><span class="caps">Pedro Enrique</span><span class="caps">Portfólio © 2026</span></div>
     <h1 class="kt" id="heroTitle" aria-label="Ideias que ganham movimento.">
       <span class="tick a" aria-hidden="true"></span><span class="tick b" aria-hidden="true"></span><span class="tick c" aria-hidden="true"></span><span class="tick d" aria-hidden="true"></span>
-      <span class="row" data-row="1" aria-hidden="true"><span class="w" data-w="ideias">IDEIAS</span><span class="sp" data-w="ideias"></span><span class="w" data-w="ideias2">QUE</span></span>
-      <span class="mid" aria-hidden="true"><span class="meta">Direção de arte<br>Motion design</span><span class="w" data-w="ganham">GANHAM</span><span class="meta r">Pedro Enrique<br>São Paulo</span></span>
+      <span class="row" data-row="1" aria-hidden="true"><span class="w" data-w="ideias">IDEIAS</span></span>
+      <span class="mid" aria-hidden="true"><span class="meta">Direção de arte<br>Motion design</span><span class="w" data-w="ganham">QUE GANHAM</span><span class="meta r">Pedro Enrique<br>São Paulo</span></span>
       <span class="row" data-row="3" aria-hidden="true"><span class="w" data-w="mov">MOVIMENTO.</span></span>
     </h1>
     <div class="hero-bottom">
@@ -724,14 +724,14 @@ function observarCase(list){
 }
 
 /* ---------- Hero: tipografia cinética ----------
-   As palavras trocam de linha (IDEIAS QUE ↔ MOVIMENTO.) e cada letra viaja sozinha,
+   As palavras trocam de linha (IDEIAS ↔ MOVIMENTO.) e cada letra viaja sozinha,
    esticando e inclinando no caminho, até se encaixar de novo. */
 const heroIn=document.getElementById('heroIn'), kt=document.getElementById('heroTitle');
 const rows={top:kt.querySelector('[data-row="1"]'), bot:kt.querySelector('[data-row="3"]')};
-const grupoA=[...rows.top.children];                 // IDEIAS, espaço, QUE
+const grupoA=[...rows.top.children];                 // IDEIAS
 const grupoB=[...rows.bot.children];                 // MOVIMENTO.
 const ganham=kt.querySelector('[data-w="ganham"]');
-kt.querySelectorAll('.w').forEach(w=>{ w.innerHTML=[...w.textContent].map(c=>`<span class="ch">${c}</span>`).join(''); });
+kt.querySelectorAll('.w').forEach(w=>{ w.innerHTML=[...w.textContent].map(c=>`<span class="ch">${c===' '?'&nbsp;':c}</span>`).join(''); });
 const letras=()=>[...kt.querySelectorAll('.row .ch, .mid .ch')];
 function medir(grupo){ // largura natural de um grupo a 100px
   let w=0; grupo.forEach(el=>{ if(el.classList.contains('sp')) w+=28; else el.querySelectorAll('.ch').forEach(c=>{ w+=c.getBoundingClientRect().width; }); });
@@ -741,10 +741,10 @@ function ajustarTitulo(){
   const W=kt.clientWidth;
   [grupoA,grupoB].forEach(g=>g.forEach(el=>el.style.setProperty('--fs','100px')));
   ganham.style.setProperty('--fs','100px');
-  const fa=Math.min(240,100*W/medir(grupoA)*0.94), fb=Math.min(240,100*W/medir(grupoB)*0.94);
+  const fb=Math.min(240,100*W/medir(grupoB)*0.94), fa=fb; // IDEIAS usa o mesmo corpo de MOVIMENTO. e se espalha pela largura
   grupoA.forEach(el=>el.style.setProperty('--fs',fa.toFixed(1)+'px'));
   grupoB.forEach(el=>el.style.setProperty('--fs',fb.toFixed(1)+'px'));
-  ganham.style.setProperty('--fs',(Math.min(fa,fb)*0.42).toFixed(1)+'px');
+  ganham.style.setProperty('--fs',(fb*0.4).toFixed(1)+'px');
 }
 ajustarTitulo();
 if(document.fonts&&document.fonts.ready) document.fonts.ready.then(ajustarTitulo);
