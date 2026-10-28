@@ -117,14 +117,18 @@ img,video{display:block;max-width:100%}
 .hero{position:relative;padding-top:calc(clamp(96px,11vw,132px) + env(safe-area-inset-top,0px));padding-bottom:clamp(64px,8vw,112px);overflow:hidden}
 .hero-in{position:relative;will-change:transform}
 .hero-top{display:flex;justify-content:space-between;gap:16px;padding-bottom:18px;border-bottom:1px solid var(--line);color:var(--gray)}
-.h-kicker{display:block;margin-top:clamp(36px,5vw,72px);color:var(--ink)}
-.h-title{margin:clamp(18px,2.4vw,32px) 0 0;font-family:var(--f-display);text-transform:uppercase;line-height:.92;letter-spacing:-.02em;--fs:clamp(3rem,12vw,13rem)}
-.h-title .ln{display:block;overflow:hidden;padding:.14em 0 .1em;margin:-.14em 0 -.1em}
-.h-title .m{display:inline-block;will-change:transform}
-.h-title .l1{font-size:calc(var(--fs)*.36);font-weight:300;letter-spacing:0;white-space:nowrap}
-.h-title .l3{font-size:var(--fs);font-weight:700;line-height:1;white-space:nowrap}
-.mov{cursor:default}
-.mov .ch{display:inline-block;will-change:transform}
+.kt{margin:clamp(40px,5.5vw,80px) 0 0;font-family:var(--f-display);font-weight:700;text-transform:uppercase;line-height:.86;letter-spacing:0;color:var(--ink);position:relative}
+.kt .row{display:flex;justify-content:space-between;align-items:flex-end;white-space:nowrap;padding-block:.04em}
+.kt .w{display:contents}
+.kt .ch{display:inline-block;font-size:var(--fs,9vw);transform-origin:50% 60%;will-change:transform}
+.kt .sp{flex:0 0 calc(var(--fs,9vw)*.28)}
+.kt .mid{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:var(--gap);margin-block:clamp(6px,1vw,14px)}
+.kt .mid .w{display:flex;gap:.02em}
+.kt .meta{font:600 clamp(9px,.8vw,11px)/1.55 var(--f-display);letter-spacing:.2em;color:var(--gray);text-transform:uppercase}
+.kt .meta.r{text-align:right}
+.kt .tick{position:absolute;width:6px;height:6px;background:var(--ink)}
+.kt .tick.a{left:0;top:-14px}.kt .tick.b{right:0;top:-14px}.kt .tick.c{left:0;bottom:-14px}.kt .tick.d{right:0;bottom:-14px}
+@media (max-width:640px){.kt .meta{display:none}.kt .mid{grid-template-columns:1fr}.kt .mid .w{justify-content:center}}
 .hero-bottom{display:flex;justify-content:flex-start;margin-top:clamp(36px,4.5vw,64px);padding-top:18px;border-top:1px solid var(--line)}
 .cta{display:inline-flex;align-items:center;gap:12px;min-height:44px;text-decoration:none;color:var(--ink);font:700 12px var(--f-display);letter-spacing:.2em;text-transform:uppercase;position:relative}
 .cta::after{content:"";position:absolute;left:0;right:34px;bottom:8px;height:1.5px;background:currentColor;transform:scaleX(.25);transform-origin:left;transition:transform .45s var(--ease)}
@@ -132,15 +136,11 @@ img,video{display:block;max-width:100%}
 .cta .ar{width:22px;height:22px;display:grid;place-items:center;transition:transform .45s var(--ease)}
 .cta .ar svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .cta:hover .ar{transform:translateY(4px)}
-/* entrada do hero, em sequência de leitura */
-.h-title .l1 .m{animation:lineUp .6s .12s cubic-bezier(.2,.8,.2,1) both}
-.h-title .l3 .m{animation:riseIn .75s .3s cubic-bezier(.2,.8,.2,1) both}
+/* entrada e trocas do título são feitas em JavaScript (Web Animations) */
 @keyframes lineUp{from{transform:translateY(105%);opacity:0}to{transform:none;opacity:1}}
-@keyframes riseIn{from{transform:translateY(28px);opacity:0}to{transform:none;opacity:1}}
 .fade{animation:fadeUp .6s var(--ease) both}
 .fade.d0{animation-delay:0s}.fade.d2{animation-delay:.85s}
 @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
-@media (max-width:600px){.h-title .l1{font-size:calc(var(--fs)*.52)}}
 
 /* ===== Mídia e placeholders ===== */
 .media{position:relative;width:100%;max-width:100%;overflow:hidden;border-radius:6px;background:var(--ph)}
@@ -423,10 +423,11 @@ figcaption .gt{display:block;font:700 15px var(--f-display);color:var(--ink);mar
 <section class="hero" id="inicio" data-tone="light" aria-labelledby="heroTitle">
   <div class="wrap hero-in" id="heroIn">
     <div class="hero-top fade d0"><span class="caps">Pedro Enrique</span><span class="caps">Portfólio © 2026</span></div>
-    <span class="caps h-kicker fade d0">Direção de arte — Motion design</span>
-    <h1 class="h-title" id="heroTitle" aria-label="Ideias que ganham movimento.">
-      <span class="ln l1" aria-hidden="true"><span class="m">Ideias que ganham</span></span>
-      <span class="ln l3" aria-hidden="true"><span class="m mov" id="mov">MOVIMENTO.</span></span>
+    <h1 class="kt" id="heroTitle" aria-label="Ideias que ganham movimento.">
+      <span class="tick a" aria-hidden="true"></span><span class="tick b" aria-hidden="true"></span><span class="tick c" aria-hidden="true"></span><span class="tick d" aria-hidden="true"></span>
+      <span class="row" data-row="1" aria-hidden="true"><span class="w" data-w="ideias">IDEIAS</span><span class="sp" data-w="ideias"></span><span class="w" data-w="ideias2">QUE</span></span>
+      <span class="mid" aria-hidden="true"><span class="meta">Direção de arte<br>Motion design</span><span class="w" data-w="ganham">GANHAM</span><span class="meta r">Pedro Enrique<br>São Paulo</span></span>
+      <span class="row" data-row="3" aria-hidden="true"><span class="w" data-w="mov">MOVIMENTO.</span></span>
     </h1>
     <div class="hero-bottom">
       <a class="cta fade d2" href="#projetos">Explorar projetos <span class="ar" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M8 2v12M3 9l5 5 5-5"/></svg></span></a>
@@ -722,41 +723,74 @@ function observarCase(list){
   list.forEach(el=>ioCase.observe(el));
 }
 
-/* ---------- Hero: MOVIMENTO. ocupa ~90% da largura e se expande com o cursor ---------- */
-const heroTitle=document.getElementById('heroTitle'), mov=document.getElementById('mov'), heroIn=document.getElementById('heroIn');
-const FOLGA=(!reduce && matchMedia('(hover:hover) and (pointer:fine)').matches)?0.9:0.99; // com mouse, 10% fica livre para a expansão
-function ajustarTitulo(){
-  heroTitle.style.setProperty('--fs','100px');
-  const w=mov.getBoundingClientRect().width, max=heroTitle.clientWidth;
-  if(w>0) heroTitle.style.setProperty('--fs', Math.min(260, Math.floor(100*max/w*FOLGA))+'px');
+/* ---------- Hero: tipografia cinética ----------
+   As palavras trocam de linha (IDEIAS QUE ↔ MOVIMENTO.) e cada letra viaja sozinha,
+   esticando e inclinando no caminho, até se encaixar de novo. */
+const heroIn=document.getElementById('heroIn'), kt=document.getElementById('heroTitle');
+const rows={top:kt.querySelector('[data-row="1"]'), bot:kt.querySelector('[data-row="3"]')};
+const grupoA=[...rows.top.children];                 // IDEIAS, espaço, QUE
+const grupoB=[...rows.bot.children];                 // MOVIMENTO.
+const ganham=kt.querySelector('[data-w="ganham"]');
+kt.querySelectorAll('.w').forEach(w=>{ w.innerHTML=[...w.textContent].map(c=>`<span class="ch">${c}</span>`).join(''); });
+const letras=()=>[...kt.querySelectorAll('.row .ch, .mid .ch')];
+function medir(grupo){ // largura natural de um grupo a 100px
+  let w=0; grupo.forEach(el=>{ if(el.classList.contains('sp')) w+=28; else el.querySelectorAll('.ch').forEach(c=>{ w+=c.getBoundingClientRect().width; }); });
+  return w;
 }
-mov.innerHTML=[...mov.textContent].map(c=>`<span class="ch">${c}</span>`).join('');
-const chars=[...mov.querySelectorAll('.ch')];
+function ajustarTitulo(){
+  const W=kt.clientWidth;
+  [grupoA,grupoB].forEach(g=>g.forEach(el=>el.style.setProperty('--fs','100px')));
+  ganham.style.setProperty('--fs','100px');
+  const fa=Math.min(240,100*W/medir(grupoA)*0.94), fb=Math.min(240,100*W/medir(grupoB)*0.94);
+  grupoA.forEach(el=>el.style.setProperty('--fs',fa.toFixed(1)+'px'));
+  grupoB.forEach(el=>el.style.setProperty('--fs',fb.toFixed(1)+'px'));
+  ganham.style.setProperty('--fs',(Math.min(fa,fb)*0.42).toFixed(1)+'px');
+}
 ajustarTitulo();
 if(document.fonts&&document.fonts.ready) document.fonts.ready.then(ajustarTitulo);
 addEventListener('resize',ajustarTitulo);
-if(!reduce && matchMedia('(hover:hover) and (pointer:fine)').matches){
-  const cur=chars.map(()=>0); let alvo=chars.map(()=>0), rodando=false, base=[];
-  const medir=()=>{ base=chars.map(c=>{const r=c.getBoundingClientRect();return r.left-cur[chars.indexOf(c)]+r.width/2;}); };
-  function calcular(x){
-    const W=heroTitle.clientWidth, sobra=W-mov.getBoundingClientRect().width;
-    const total=Math.max(0,sobra*0.85), sig=W*0.22;
-    // espaço extra entre letras vizinhas, maior perto do cursor
-    const gaps=base.slice(0,-1).map((b,i)=>{const mid=(b+base[i+1])/2; return Math.exp(-(((mid-x)/sig)**2));});
-    const soma=gaps.reduce((a,b)=>a+b,0)||1;
-    let acc=0; alvo=[0,...gaps.map(g=>(acc+=g*total/soma))];
-  }
-  function passo(){
-    let ativo=false;
-    chars.forEach((c,i)=>{ cur[i]+= (alvo[i]-cur[i])*0.14; if(Math.abs(alvo[i]-cur[i])>0.1) ativo=true; c.style.transform=`translate3d(${cur[i].toFixed(2)}px,0,0)`; });
-    if(ativo) requestAnimationFrame(passo); else rodando=false;
-  }
-  const iniciar=()=>{ if(!rodando){ rodando=true; requestAnimationFrame(passo); } };
-  const area=heroTitle.querySelector('.l3');
-  area.addEventListener('pointerenter',()=>{ medir(); });
-  area.addEventListener('pointermove',e=>{ if(!base.length) medir(); calcular(e.clientX); iniciar(); });
-  area.addEventListener('pointerleave',()=>{ alvo=chars.map(()=>0); iniciar(); });
-  addEventListener('resize',()=>{ base=[]; });
+
+const rnd=(a,b)=>a+Math.random()*(b-a);
+const EASE='cubic-bezier(.7,0,.2,1)';
+function entrada(){
+  letras().forEach((c,i)=>{
+    c.animate([
+      {transform:`translate(${rnd(-60,60)}px,${rnd(40,140)}px) skewX(${rnd(-30,30)}deg) scaleY(${rnd(.2,.6)})`,opacity:0},
+      {transform:'none',opacity:1}
+    ],{duration:900,delay:120+i*22,easing:'cubic-bezier(.2,.8,.2,1)',fill:'backwards'});
+  });
+}
+let trocado=false, ocupado=false;
+function trocar(){
+  if(ocupado) return; ocupado=true;
+  const ls=letras(), antes=new Map(ls.map(c=>[c,c.getBoundingClientRect()]));
+  // move os grupos de linha (FLIP)
+  const deCima=[...rows.top.children], deBaixo=[...rows.bot.children];
+  deBaixo.forEach(el=>rows.top.appendChild(el)); deCima.forEach(el=>rows.bot.appendChild(el));
+  trocado=!trocado;
+  let fim=0;
+  ls.forEach((c,i)=>{
+    const a=antes.get(c), b=c.getBoundingClientRect();
+    const dx=a.left-b.left, dy=a.top-b.top;
+    const naMid=!!c.closest('.mid');
+    const atraso=naMid? 160+i*14 : rnd(0,260)+i*10;
+    const meio=naMid
+      ? `translateY(${rnd(-.25,.25)}em) scaleY(${rnd(.25,.55)}) skewX(${rnd(-18,18)}deg)`
+      : `translate(${(dx*.45).toFixed(1)}px,${(dy*.5).toFixed(1)}px) skewX(${rnd(-28,28).toFixed(1)}deg) scaleX(${rnd(.7,1.4).toFixed(2)}) scaleY(${rnd(.35,1.7).toFixed(2)})`;
+    c.animate([
+      {transform:`translate(${dx}px,${dy}px)`},
+      {transform:meio,offset:.5},
+      {transform:'none'}
+    ],{duration:1050,delay:atraso,easing:EASE,fill:'backwards'});
+    fim=Math.max(fim,atraso+1050);
+  });
+  setTimeout(()=>{ocupado=false},fim);
+}
+if(!reduce && 'animate' in Element.prototype){
+  entrada();
+  let visivel=true;
+  if('IntersectionObserver' in window) new IntersectionObserver(es=>{visivel=es[0].isIntersecting}).observe(kt);
+  setInterval(()=>{ if(visivel && !document.hidden) trocar(); },4600);
 }
 
 /* ---------- Projetos ---------- */
